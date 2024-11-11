@@ -4,14 +4,14 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #ffffff;
+  --foreground: #000000;
   cursor: default;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #ffffff;
-    --foreground: #ffffff;
+    --foreground: #000000;
   }
 }
 

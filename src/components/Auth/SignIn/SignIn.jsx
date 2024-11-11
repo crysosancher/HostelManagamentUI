@@ -1,43 +1,86 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react"; 
+import Link from "next/link"; 
+import { useRouter } from "next/navigation"; 
+import { Bounce, ToastContainer, toast } from "react-toastify"; 
+import "react-toastify/dist/ReactToastify.css"; 
+
 import styles from "./SignIn.module.css";
 
 export default function SignInComponent() {
+  const router = useRouter();
   const [signInFormData, setSignInFormData] = useState({
-    email: "",
+    username: "",
     password: "",
+    rememberme: false, // Add remember me field to the form data
   });
-  const [signInErrors, setSignInErrors] = useState({});
+
+  const showToast = useCallback((message) => {
+    toast.error(message, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "dark", 
+      transition: Bounce, 
+    });
+  }, []);
 
   const handleSignInChange = (e) => {
-    const { name, value } = e.target;
-    setSignInFormData((prev) => ({ ...prev, [name]: value }));
-    setSignInErrors((prev) => ({ ...prev, [name]: "" }));
+    const { name, value, type, checked } = e.target;
+    setSignInFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value, // Handle checkbox separately
+    }));
   };
 
-  const validateSignIn = () => {
-    const errors = {};
-    if (!signInFormData.email) {
-      errors.email = "Email is required.";
-    } else if (!/\S+@\S+\.\S+/.test(signInFormData.email)) {
-      errors.email = "Email address is invalid.";
+  useEffect(() => {
+    const token = localStorage.getItem(`UserAccessToken`) || sessionStorage.getItem(`UserAccessToken`);
+    if (token) {
+      router.push(`/admin/dashboard/overview`);
     }
-    if (!signInFormData.password) {
-      errors.password = "Password is required.";
-    }
-    setSignInErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
+  }, [router]);
 
-  const handleSignInSubmit = (e) => {
-    e.preventDefault();
-    if (validateSignIn()) {
-      console.log("Signing in with", signInFormData);
+  const handleSignInSubmit = useCallback(async (event) => {
+    event.preventDefault(); 
+
+    if (!signInFormData.username || !signInFormData.password) {
+      showToast("Please fill in all fields.");
+      return;
     }
-  };
+
+    localStorage.setItem(`remember-me`, signInFormData.rememberme);
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(signInFormData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const storage = signInFormData.rememberme ? localStorage : sessionStorage;
+        storage.setItem("UserAccessToken", data.token);
+        router.push(`/admin/dashboard/overview`);
+      } else {
+        const errorMessages = {
+          404: "User doesn't exist",
+          401: "Wrong credentials!",
+        };
+        showToast(errorMessages[response.status] || "Something went wrong! Please try again later.");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      showToast("Something went wrong! Please try again later.");
+    }
+  }, [signInFormData, router, showToast]);
 
   return (
     <main className={styles.authContainer}>
+      <ToastContainer />
       <section className={styles.sidePanel}>
         <h1>Welcome Back!</h1>
         <p>Enter your personal details to use all site features.</p>
@@ -47,15 +90,12 @@ export default function SignInComponent() {
         <form aria-label="Sign In" onSubmit={handleSignInSubmit}>
           <h1>Sign In</h1>
           <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={signInFormData.email}
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={signInFormData.username}
             onChange={handleSignInChange}
           />
-          {signInErrors.email && (
-            <p className={styles.error}>{signInErrors.email}</p>
-          )}
           <input
             type="password"
             name="password"
@@ -63,9 +103,19 @@ export default function SignInComponent() {
             value={signInFormData.password}
             onChange={handleSignInChange}
           />
-          {signInErrors.password && (
-            <p className={styles.error}>{signInErrors.password}</p>
-          )}
+
+          <div className={styles.rememberMeWrapper}>
+            <label>
+              <input
+                type="checkbox"
+                name="rememberme"
+                checked={signInFormData.rememberme}
+                onChange={handleSignInChange}
+              />
+              Remember Me
+            </label>
+          </div>
+
           <span className={styles.forgotPassword}>Forgot Password?</span>
           <button type="submit" className={styles.submitButton}>
             Sign In
@@ -74,4 +124,4 @@ export default function SignInComponent() {
       </section>
     </main>
   );
-};
+}

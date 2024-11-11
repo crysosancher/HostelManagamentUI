@@ -81,7 +81,7 @@ export default function Header() {
                         : styles.dropdownOption
                     }`}
                   >
-                    Update/Remove Student
+                    Manage Student
                   </Link>
                 </li>
               </ul>
