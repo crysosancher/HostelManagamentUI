@@ -156,12 +156,3 @@
 .table tbody tr:last-child td {
     border-bottom: none;
 }
-
-.studentDetails a {
-    display: contents;
-    width: fit-content;
-}
-
-.studentDetails h1 {
-    width: fit-content;
-}

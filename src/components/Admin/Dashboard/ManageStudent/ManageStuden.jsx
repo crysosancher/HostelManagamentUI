@@ -4,9 +4,11 @@ import Styles from "./ManageStudent.module.css";
 import data from "../ViewStudent/Data.json";
 import useFetchUserData from "@/components/Api/fetchUserData";
 import { IoIosArrowDown } from "react-icons/io";
+import { useRouter } from "next/navigation"; // Import useRouter from next/router
 
 export default function ManageStudentComponent() {
   const { userData } = useFetchUserData("user/getall", "GET");
+  const router = useRouter(); // Initialize the router
 
   const roomTypeMap = {
     "1": "Deluxe Room",
@@ -16,25 +18,7 @@ export default function ManageStudentComponent() {
     "5": "Five Sharing Room",
     "6": "Six Sharing Room",
   };
-// "user_id": 1,
-//             "user_name": "John Doe",
-//             "dob": "1990-01-01",
-//             "mobile": 1234567890,
-//             "email_id": "john.doe@example.com",
-//             "adhaar": 123412341234,
-//             "pan": "ABCDE1234F",
-//             "address": "123 Main Street",
-//             "work_address": "456 Work Avenue",
-//             "start_date": "2023-12-31",
-//             "end_date": "2024-12-30",
-//             "notice_ind": "N",
-//             "bed_no": 101,
-//             "active": "Y",
-//             "room_no": "A1",
-//             "photo": null,
-//             "rent": 5000,
-//             "emergency_no": 9876543210,
-//             "room_type": "2"
+
   const [searchQuery, setSearchQuery] = useState("");
   const [roomFilter, setRoomFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -95,6 +79,9 @@ export default function ManageStudentComponent() {
         }, 300); // Time matching the animation duration
       }
     };
+    const handleUpdateDetails = (userId) => {
+      router.push(`/admin/dashboard/manage-student/${userId}`);
+    };
 
     return (
     <main>
@@ -153,7 +140,7 @@ export default function ManageStudentComponent() {
                 <td>{item.active}</td>
                 <td>{item.room_no}</td>
                 <td>{item.bed_no}</td>
-                <td>Update</td>
+                <td  onClick={() => handleUpdateDetails(item.user_id)}>Update</td>
                 <td>Remove</td>
               </tr>
             ))}
