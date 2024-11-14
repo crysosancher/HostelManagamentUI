@@ -1,0 +1,125 @@
+.authContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    box-shadow: 0 0.3125rem 0.9375rem rgba(0, 0, 0, 0.35);
+    width: 100%;
+    height: 100vh;
+    font-family: var(--font-Montserrat);
+}
+
+.formWrapper {
+    display: flex;
+    width: 70%;
+    transition: transform 0.6s ease-in-out;
+}
+
+.formWrapper form {
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 65%;
+    margin: auto;
+    padding: 2.5rem 0;
+}
+
+.formWrapper form h1 {
+    color: #333;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.formWrapper form input[type="text"],
+.formWrapper form input[type="password"] {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    color: black;
+    margin: 0.5rem 0;
+    padding: 0.625rem 0.9375rem;
+    font-size: 0.8125rem;
+    border-radius: 0.5rem;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.formWrapper form input[type="text"]:focus,
+.formWrapper form input[type="password"]:focus
+{
+    border-color: #512da8;
+    box-shadow: 0 0.2rem 0.5rem rgba(81, 45, 168, 0.5);
+}
+
+.formWrapper form button {
+    background-color: #512da8;
+    color: #fff;
+    font-size: 1rem;
+    padding: 0.6rem 1.8rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.625rem;
+    transition: background-color 0.3s;
+}
+
+.formWrapper form button:hover {
+    background-color: #6348a3;
+}
+
+.forgotPassword {
+    color: #333;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    margin: 0.9375rem 0 0.625rem;
+}
+
+.sidePanel {
+    background: linear-gradient(to right, #5c6bc0, #512da8);
+    color: #fff;
+    height: 100%;
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 1.875rem;
+    text-align: center;
+}
+
+.sidePanel h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.sidePanel p {
+    font-size: 1rem;
+}
+
+.rememberMeWrapper {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.rememberMeWrapper label {
+    font-size: 0.875rem;
+    color: #333;
+    cursor: pointer;
+}
+
+.rememberMeWrapper input {
+    margin-right: 0.5rem;
+    accent-color: #512da8; /* To style the checkbox with your theme color */
+}
+
+.error {
+    color: red;
+    font-size: 0.8em;
+    margin: 0.25em auto 0 0;
+}
